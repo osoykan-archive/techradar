@@ -44,7 +44,8 @@ function radar_visualization(config) {
     { radial_min: 0, radial_max: 0.5, factor_x: 1, factor_y: 1 },
     { radial_min: 0.5, radial_max: 1, factor_x: -1, factor_y: 1 },
     { radial_min: -1, radial_max: -0.5, factor_x: -1, factor_y: -1 },
-    { radial_min: -0.5, radial_max: 0, factor_x: 1, factor_y: -1 }
+    { radial_min: -0.5, radial_max: 0, factor_x: 1, factor_y: -1 },
+    { radial_min: -0.3, radial_max: -0.5, factor_x: 1, factor_y: -1 }
   ];
 
   const rings = [
@@ -63,8 +64,9 @@ function radar_visualization(config) {
   const legend_offset = [
     { x: 450, y: 90 },
     { x: -675, y: 90 },
-    { x: -675, y: -310 },
-    { x: 450, y: -310 }
+    { x: -675, y: -320 },
+    { x: 450, y: -320 },
+    { x: 450, y: 400 }
   ];
 
   function polar(cartesian) {
@@ -154,9 +156,9 @@ function radar_visualization(config) {
   }
 
   // partition entries according to segments
-  var segmented = new Array(4);
-  for (var quadrant = 0; quadrant < 4; quadrant++) {
-    segmented[quadrant] = new Array(4);
+  var segmented = new Array(5);
+  for (var quadrant = 0; quadrant < 5; quadrant++) {
+    segmented[quadrant] = new Array(5);
     for (var ring = 0; ring < 4; ring++) {
       segmented[quadrant][ring] = [];
     }
@@ -168,7 +170,7 @@ function radar_visualization(config) {
 
   // assign unique sequential id to each entry
   var id = 1;
-  for (var quadrant of [2,3,1,0]) {
+  for (var quadrant of [2,3,4,1,0]) {
     for (var ring = 0; ring < 4; ring++) {
       var entries = segmented[quadrant][ring];
       entries.sort(function(a,b) { return a.label.localeCompare(b.label); })
@@ -255,8 +257,8 @@ function radar_visualization(config) {
   }
 
   function legend_transform(quadrant, ring, index=null) {
-    var dx = ring < 2 ? 0 : 120;
-    var dy = (index == null ? -16 : index * 12);
+    var dx = ring < 2 ? 0 : 140;
+    var dy = (index == null ? -16 : index * 14);
     if (ring % 2 === 1) {
       dy = dy + 36 + segmented[quadrant][ring-1].length * 12;
     }
@@ -286,7 +288,7 @@ function radar_visualization(config) {
 
     // legend
     var legend = radar.append("g");
-    for (var quadrant = 0; quadrant < 4; quadrant++) {
+    for (var quadrant = 0; quadrant < 5; quadrant++) {
       legend.append("text")
         .attr("transform", translate(
           legend_offset[quadrant].x,
